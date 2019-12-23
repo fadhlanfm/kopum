@@ -1,0 +1,7 @@
+PROCEDURE hitungPakaian(jumlahPakaian)
+    count = 0
+    WHILE count < jumlahPakaian
+        ADD 1 to count
+    END WHILE
+    RETURN count
+END PROCEDURE

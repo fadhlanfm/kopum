@@ -895,12 +895,13 @@ class Admin extends MY_Controller {
 		$this->isNotAdmin();
 		$this->isNotSuperAdmin();
 
-		if(!empty($_FILES["document"]["name"])){
+		if(!empty($_FILES["doc"]["name"])){
 			$config2['upload_path']          = './uploads/public_documents/';
+			$config2['allowed_types']        = '*';
 			$config2['max_size']             = 11000;
 			$this->load->library('upload', $config2);
 			$this->upload->initialize($config2);
-			$this->upload->do_upload('document');
+			$this->upload->do_upload('doc');
 			$location = $this->upload->data('file_name');  
 			$type = $this->upload->data('file_ext');  
 			$name = $this->input->post('name');
@@ -916,9 +917,75 @@ class Admin extends MY_Controller {
 		}else{
 			redirect(site_url('admin/showDocuments'));
 		}
-
 	}
 
+	public function deleteDocumentProcess(){
+		$this->isNotAdmin();
+		$this->isNotSuperAdmin();
+
+        $id = $this->input->post('id');
+        $name = $this->input->post('name');
+		
+		$query = $this->Mysql->read('documents', array('id'=>$id), 'id', 'ASC', null, null);
+		if($query->num_rows()>0){
+			foreach($query->result() as $result){
+				$location = $result->location;
+				}
+			}
+
+		$delete = $this->Mysql->delete(array('id'=>$id), 'documents');
+
+		unlink('uploads/public_documents/'.$location);
+
+		$this->session->set_flashdata('message', 'delete_success');
+		$this->session->set_flashdata('object', $name);
+		$this->session->set_flashdata('id', $this->input->post('id'));
+		redirect(site_url('admin/showDocuments'));
+	}
+
+	public function editDocumentProcess($id){
+		$this->isNotAdmin();
+		$this->isNotSuperAdmin();
+
+		$query = $this->Mysql->read('documents', array('id'=>$id), 'id', 'ASC', null, null);
+		if($query->num_rows()>0){
+			foreach($query->result() as $result){
+				$location = $result->location;
+				$type = $result->type;
+				}
+			}
+
+		$name = $this->input->post('name');
+
+		if(!empty($_FILES["doc"]["name"])){
+			$config2['upload_path']          = './uploads/public_documents/';
+			$config2['allowed_types']        = '*';
+			$config2['max_size']             = 11000;
+			$this->load->library('upload', $config2);
+			$this->upload->initialize($config2);
+			$this->upload->do_upload('doc');
+			$location = $this->upload->data('file_name');  
+			$type = $this->upload->data('file_ext');
+		}else{
+			$location=$location;
+			$type=$type;
+		}
+
+		$data   = array(
+			'name'=>$name, 
+			'type'=>$type, 
+			'location'=>$location,
+			'updated_at' => date('Y-m-d')
+		);
+
+		$update = $this->Mysql->update(array('id'=>$id), 'documents', $data);
+
+		$this->session->set_flashdata('message', 'edit_success');
+		$this->session->set_flashdata('object', $name);
+		$this->session->set_flashdata('id', $id);
+
+		redirect(site_url('admin/showDocuments'));
+	}
 	/* end PUBLIC DOCUMENTS group */
 
 

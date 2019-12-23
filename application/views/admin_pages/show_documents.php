@@ -1,3 +1,10 @@
+<?php
+foreach($query->result_array() as $d){ 
+    $id=$d['id'];
+    $name=$d['name'];
+    $location=$d['location'];
+}
+?>
     <!--==========================
       Schedule Section
     ============================-->
@@ -60,13 +67,45 @@
                     <?php foreach($query->result_array() as $d){ 
                         $id=$d['id'];
                         $name=$d['name'];
+                        $type=$d['type'];
+                        $location=$d['location'];
+                        $type = str_replace('.', '', $type);
                         ?>
                     <tr>
                         <td><?php echo $id; ?></td>
                         <td><?php echo $name; ?></td>
+                        <td><?php 
+                        switch ($type) {
+                            case 'pdf':
+                                echo '<button type="button" class="btn btn-sm btn-light"><i class="far fa-file-pdf"></i></button> ';
+                                break;
+                            case 'jpg':
+                            case 'jpeg':
+                                echo '<button type="button" class="btn btn-sm btn-light"><i class="far fa-image"></i></button> ';
+                                break;
+                            case 'xls':
+                            case 'xlsx':
+                                echo '<button type="button" class="btn btn-sm btn-light"><i class="far fa-file-excel"></i></button> ';
+                                break;
+                            case 'doc':
+                            case 'docx':
+                                echo '<button type="button" class="btn btn-sm btn-light"><i class="far fa-file-word"></i></button> ';
+                                break;
+                            case 'ppt':
+                            case 'pptx':
+                            case 'ppsx':
+                                echo '<button type="button" class="btn btn-sm btn-light"><i class="far fa-file-powerpoint"></i></button> ';
+                                break;
+                            case 'txt':
+                                echo '<button type="button" class="btn btn-sm btn-light"><i class="far fa-file-alt"></i></button> ';
+                                break;
+                            default:
+                                break;
+                        } 
+                        echo $type; ?></td>
                         <td>
+                        <a class="btn btn-sm btn-info" href="<?php echo base_url().'uploads/public_documents/'.$location;?>" style="color: black;"><i class="far fa-eye"></i></a>
                         <a class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal_edit<?php echo $id;?>"><i class="far fa-edit"></i></a>
-                        <a class="btn btn-sm btn-warning" data-toggle="modal" data-target="#modal_delete<?php echo $id;?>"><i class="far fa-trash-alt"></i></a>
                         <a class="btn btn-sm btn-warning" data-toggle="modal" data-target="#modal_delete<?php echo $id;?>"><i class="far fa-trash-alt"></i></a>
                         </td>
                     </tr>
@@ -85,20 +124,21 @@
 
 <!-- ============ START MODAL EDIT FORMAT =============== -->
     <?php 
-        foreach($query->result_array() as $i):
-            $id=$i['id'];
-            $format=$i['format'];
+        foreach($query->result_array() as $d):
+            $id=$d['id'];
+            $name=$d['name'];
+            $location=$d['location'];
         ?>
         <div class="modal fade" id="modal_edit<?php echo $id;?>" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
             <div class="modal-dialog">
             <div class="modal-content">
             <div class="modal-header">
-            <h4 class="modal-title" id="exampleModalLabel">Edit format</h4>
+            <h4 class="modal-title" id="exampleModalLabel">Edit document</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
             </div>
-            <form class="form-horizontal" method="post" action="<?php echo base_url().'admin/editFormatProcess'?>">
+            <form class="form-horizontal" enctype="multipart/form-data" method="post" action="<?php echo base_url().'admin/editDocumentProcess/'.$id;?>">
                 <div class="modal-body">
 
                     <div class="form-group">
@@ -108,10 +148,30 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label col-xs-3" >Format</label>
+                        <label class="control-label col-xs-3" >Current file</label>
                         <div class="col-xs-8">
-                            <input name="format" value="<?php echo $format;?>" class="form-control" type="text" placeholder="Format" required>
+                            <a href="<?php echo base_url().'uploads/public_documents/'.$location;?>"><?php echo $location ?><a>
                         </div>
+                        <small id="docHelper" class="form-text text-muted">
+                        Insert file on the field below if you want to change <b>or</b> ignore if you don't want to.
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-3" >File name</label>
+                        <div class="col-xs-8">
+                            <input name="name" value="<?php echo $name;?>" class="form-control" type="text" placeholder="File name" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-3" >Change file</label>
+                        <div class="col-xs-8">
+                            <input type="file" class="form-control" id="document" name="doc" accept="application/pdf, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.slideshow, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, image/jpeg" aria-describedby="docHelper">
+                        </div>
+                        <small id="docHelper" class="form-text text-muted">
+                        Accept image (jpg) or document (pdf, xls, doc, ppt, txt). Maximum size: 10 mb.
+                        </small>
                     </div>
 
                 </div>
@@ -175,15 +235,15 @@
 
 <!-- ============ START MODAL DELETE FORMAT =============== -->
 <?php 
-foreach($query->result_array() as $i):
-    $id=$i['id'];
-    $format=$i['format'];
+foreach($query->result_array() as $d):
+    $id=$d['id'];
+    $name=$d['name'];
 ?>
 <div class="modal fade" id="modal_delete<?php echo $id;?>" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="exampleModalLabel">Delete format</h4>
+                <h4 class="modal-title" id="exampleModalLabel">Delete document</h4>
 
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -191,13 +251,13 @@ foreach($query->result_array() as $i):
 
             </div>
 
-            <form class="form-horizontal" method="post" action="<?php echo base_url().'admin/deleteFormatProcess'?>">
+            <form class="form-horizontal" method="post" action="<?php echo base_url().'admin/deleteDocumentProcess'?>">
                 <div class="modal-body">
-                    <p>Are you sure want to permanently delete <b><?php echo $format;?></b> ?</p>
+                    <p>Are you sure want to permanently delete <b><?php echo $name;?></b> ?</p>
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" name="id" value="<?php echo $id;?>">
-                    <input type="hidden" name="format" value="<?php echo $format;?>">
+                    <input type="hidden" name="name" value="<?php echo $name;?>">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-hidden="true">Close</button>
                     <button type="submit" class="btn btn-warning">Delete</button>
                 </div>
