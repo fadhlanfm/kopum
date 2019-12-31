@@ -47,26 +47,30 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right ml-auto">
-                <li class="nav-item dropdown <?php if($this->uri->segment(2)=="showFormats" || $this->uri->segment(2)=="showInstructors" || $this->uri->segment(2)=="addInstructor" || $this->uri->segment(2)=="editInstructor" || $this->uri->segment(2)=="showTrainings"|| $this->uri->segment(2)=="addTraining"|| $this->uri->segment(2)=="editTraining"|| $this->uri->segment(2)=="showSyllabuses"){echo 'active';}?>">
+                <li class="nav-item dropdown <?php if($this->uri->segment(2)=="showFormats" || $this->uri->segment(2)=="showTrainings"|| $this->uri->segment(2)=="addTraining"|| $this->uri->segment(2)=="editTraining"|| $this->uri->segment(2)=="showSyllabuses"){echo 'active';}?>">
                     <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle user-action"><b class="caret"></b><i class="far fa-edit"></i></a>
                     <ul class="dropdown-menu">
                         <li><a href="<?php echo base_url('admin/showTrainings'); ?>" class="dropdown-item">Trainings</a></li>
                         <li><a href="<?php echo base_url('admin/showSyllabuses'); ?>" class="dropdown-item">Syllabuses</a></li>
                         <li class="divider dropdown-divider"></li>
-                        <li><a href="<?php echo base_url('admin/showInstructors'); ?>" class="dropdown-item">Instructors</a></li>
-                        <li class="divider dropdown-divider"></li>
                         <li><a href="<?php echo base_url('admin/showFormats'); ?>" class="dropdown-item">Formats</a></li>
                         <li><a href="<?php echo base_url('admin/showDisciplines'); ?>" class="dropdown-item">Disciplines</a></li>
                         <li class="divider dropdown-divider"></li>
-                        <li><a href="<?php echo base_url('admin/showDocuments'); ?>" class="dropdown-item">Public Documents</a></li>
+                        <li><a href="<?php echo base_url('admin/showTestimonials'); ?>" class="dropdown-item">Testimonials</a></li>
                     </ul>
                 </li>
-                <li class="nav-item dropdown">
+                <li class="nav-item dropdown <?php if($this->uri->segment(2)=="showInstructors" || $this->uri->segment(2)=="addInstructor" || $this->uri->segment(2)=="editInstructor"){echo 'active';} ?>">
                     <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle user-action"><b class="caret"></b><i class="fas fa-users"></i></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#" class="dropdown-item">Email Blast</a></li>
-                        <li><a href="#" class="dropdown-item">Subscribers</a></li>
+                    <ul class="dropdown-menu"> 
+                        <li><a href="<?php echo base_url('admin/showInstructors'); ?>" class="dropdown-item">Instructors</a></li>
                     </ul>
+                </li>
+                <li class="nav-item dropdown <?php if($this->uri->segment(2)=="showDocuments" || $this->uri->segment(2)==""){echo 'active';} ?>">
+                    <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle user-action"><b class="caret"></b><i class="far fa-folder-open"></i></a>
+                    <ul class="dropdown-menu">
+                    <li><a href="<?php echo base_url('admin/showGallery'); ?>" class="dropdown-item">Gallery</a></li>        
+                    <li><a href="<?php echo base_url('admin/showDocuments'); ?>" class="dropdown-item">Public Documents</a></li>        
+                </ul>
                 </li>
                 <li class="nav-item dropdown <?php if($this->uri->segment(2)=="settings"){echo 'active';}?>">
                     <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle user-action"><b class="caret"></b><i class="fas fa-user-cog"></i></a>
