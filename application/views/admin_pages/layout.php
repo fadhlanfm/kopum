@@ -65,7 +65,7 @@
                         <li><a href="<?php echo base_url('admin/showInstructors'); ?>" class="dropdown-item">Instructors</a></li>
                     </ul>
                 </li>
-                <li class="nav-item dropdown <?php if($this->uri->segment(2)=="showDocuments" || $this->uri->segment(2)==""){echo 'active';} ?>">
+                <li class="nav-item dropdown <?php if($this->uri->segment(2)=="showDocuments" || $this->uri->segment(2)=="showGallery"){echo 'active';} ?>">
                     <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle user-action"><b class="caret"></b><i class="far fa-folder-open"></i></a>
                     <ul class="dropdown-menu">
                     <li><a href="<?php echo base_url('admin/showGallery'); ?>" class="dropdown-item">Gallery</a></li>        

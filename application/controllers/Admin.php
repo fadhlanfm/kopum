@@ -988,6 +988,17 @@ class Admin extends MY_Controller {
 	}
 	/* end PUBLIC DOCUMENTS group */
 
+	/* start GALLERY group */
+	public function showGallery(){
+		$this->isNotAdmin();
+		$this->isNotSuperAdmin();
+		$this->data['page_title'] = 'Gallery - KOPUM IATMI';
+        $this->data['query_gallery'] = $this->Mysql->read('gallery', null, 'id', 'ASC', null, null);
+        $this->data['query_trainings'] = $this->Mysql->read('trainings', null, 'id', 'ASC', null, null);
+        $temp_data['content'] = $this->load->view('admin_pages/show_gallery', $this->data, true);
+		$this->load->view('admin_pages/layout', $temp_data, false);
+	}
+	/* end GALLERY group */
 
 	/* start SETTINGS group */
 	public function settings(){
