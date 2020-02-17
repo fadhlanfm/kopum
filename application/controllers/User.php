@@ -31,7 +31,7 @@ class User extends MY_Controller {
 	{   
 		$temp_data['page_title'] = 'KOPUM IATMI';
 		$this->data['query_trainings'] = $this->Mysql->read('trainings', null, 'id', 'ASC', null, null);
-		$temp_data['content'] = $this->load->view('public_pages/index', $this->data, true);
+		$temp_data['content'] = $this->load->view('public_pages/landing_page', $this->data, true);
 		$this->load->view('public_pages/layout', $temp_data, false);
     }
 
