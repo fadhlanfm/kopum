@@ -1061,6 +1061,55 @@ class Admin extends MY_Controller {
 	}
 
 	/* end GALLERY group */
+	
+
+	/* start TESTIMONIALS group */
+	public function showTestimonials(){
+		$this->isNotAdmin();
+		$this->isNotSuperAdmin();
+		$this->data['page_title'] = 'Testimonials - KOPUM IATMI';
+        $this->data['query_testimonials'] = $this->Mysql->read('testimonials', null, 'id', 'ASC', null, null);
+        $this->data['query_trainings'] = $this->Mysql->read('trainings', null, 'id', 'ASC', null, null);
+        $temp_data['content'] = $this->load->view('admin_pages/show_testimonials', $this->data, true);
+		$this->load->view('admin_pages/layout', $temp_data, false);
+	}
+	
+	public function addTestiProcess(){
+		$this->isNotAdmin();
+		$this->isNotSuperAdmin();
+		
+		$id_training = $this->input->post('id_training');
+        $commenter_name = $this->input->post('name');
+        $commenter_title = $this->input->post('title');
+        $commenter_company = $this->input->post('company');
+        $comment = $this->input->post('testimony');
+        $overall = $this->input->post('overall');
+
+		$data   = array(
+			'id_training'=>$id_training, 
+			'commenter_name'=>$commenter_name,
+			'commenter_title'=>$commenter_title,
+			'commenter_company'=>$commenter_company,
+			'comment'=>$comment,
+			'overall'=>$overall
+		);
+		$insert = $this->Mysql->create('testimonials', $data);
+
+		$query = $this->Mysql->getLatest('testimonials');
+		if($query->num_rows()>0){
+			foreach($query->result() as $result){
+				$latestTestimonyID=$result->id;
+			}
+		}
+
+		$this->session->set_flashdata('message', 'add_success');
+		$this->session->set_flashdata('object', $comment);
+		$this->session->set_flashdata('id', $latestTestimonyID);
+
+        redirect(site_url('admin/showTestimonials'));
+	}
+
+	/* end TESTIMONIALS group */
 
 	/* start SETTINGS group */
 	public function settings(){

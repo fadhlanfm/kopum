@@ -36,7 +36,7 @@
                 </div>';
             }
         ?>
-            <h2>Gallery</h2>
+            <h2>Testimonials</h2>
         </div>
         
 
@@ -52,32 +52,37 @@
                     <tr>
                         <td>ID</td>
                         <td>Training</td>
-                        <td>Title</td>
+                        <td>Commenter</td>
+                        <td>Company</td>
+                        <td>Overall</td>
                         <td>Actions</td>
                     </tr>
                 </thead>
                 <tbody>
                 <?php
-                foreach($query_gallery->result_array() as $g){
-                    $id=$g['id'];
-                    $id_training=$g['id_training'];
-                    $url=$g['url'];
-                    $title=$g['title'];
+                foreach($query_testimonials->result_array() as $t){
+                    $id=$t['id'];
+                    $id_training=$t['id_training'];
+                    $commenter_name=$t['commenter_name'];
+                    $commenter_title=$t['commenter_title'];
+                    $commenter_company=$t['commenter_company'];
+                    $overall=$t['overall'];
                 ?>
                     <tr>
                         <td><?php echo $id; ?></td>
                         <td><?php
-                            foreach($query_trainings->result_array() as $t){
-                                $id_t=$t['id'];
-                                $topic_t=$t['topic'];
-                                if($id_training==$id_t){
-                                    echo $topic_t;;
+                            foreach($query_trainings->result_array() as $tr){
+                                $id_tr=$tr['id'];
+                                $topic_tr=$tr['topic'];
+                                if($id_training==$id_tr){
+                                    echo $topic_tr;;
                                 }
                             }
                         ?></td>
-                        <td><?php echo $title; ?></td>
+                        <td><?php echo $commenter_name; echo ' - '; echo $commenter_title; ?></td>
+                        <td><?php echo $commenter_company; ?></td>
+                        <td><?php echo $overall; ?></td>
                         <td>
-                        <a class="btn btn-sm btn-info" href="<?php echo $url; ?> " style="color: black;"><i class="far fa-eye"></i></a>
                         <a class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal_edit<?php echo $id;?>"><i class="far fa-edit"></i></a>
                         <a class="btn btn-sm btn-warning" data-toggle="modal" data-target="#modal_delete<?php echo $id;?>"><i class="far fa-trash-alt"></i></a>
                         </td>
@@ -94,9 +99,9 @@
 
 </section>
 
-<!-- ============ START MODAL EDIT GALLERY =============== -->
+<!-- ============ START MODAL EDIT TESTIMONY =============== -->
         <?php
-        foreach($query_gallery->result_array() as $g1):
+        foreach($query_testimonials->result_array() as $g1):
             $id_g1=$g1['id'];
             $id_training_g1=$g1['id_training'];
             $url_g1=$g1['url'];
@@ -153,10 +158,9 @@
         </div>
 
     <?php endforeach;?>
-    <!-- ============ END MODAL EDIT GALLERY =============== -->
+    <!-- ============ END MODAL EDIT TESTIMONY =============== -->
 
-<!-- ============ START MODAL ADD GALLERY =============== -->
-
+<!-- ============ START MODAL ADD TESTIMONY =============== -->
 <div class="modal fade" id="modal_add" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
             <div class="modal-dialog">
             <div class="modal-content">
@@ -166,7 +170,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
             </div>
-            <form class="form-horizontal" enctype="multipart/form-data" method="post" action="<?php echo base_url().'admin/addGalleryProcess'?>">
+            <form class="form-horizontal" enctype="multipart/form-data" method="post" action="<?php echo base_url().'admin/addTestiProcess'?>">
                 <div class="modal-body">
 
                     <div class="form-group">
@@ -186,19 +190,45 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label col-xs-3" >Image URL</label>
+                        <label class="control-label col-xs-3" >Name</label>
                         <div class="col-xs-8">
-                            <input name="url" class="form-control" type="text" placeholder="e.g., https://i.imgur.com/jsgYqj1.jpg" required>
+                            <input name="name" class="form-control" type="text" placeholder="Who gives the testimony" required>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label class="control-label col-xs-3" >Title</label>
                         <div class="col-xs-8">
-                            <input name="title" class="form-control" type="text" placeholder="Image title" required>
+                            <input name="title" class="form-control" type="text" placeholder="His/Her job title" required>
                         </div>
                     </div>
 
+                    <div class="form-group">
+                        <label class="control-label col-xs-3" >Company</label>
+                        <div class="col-xs-8">
+                            <input name="company" class="form-control" type="text" placeholder="His/Her company" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-3" >Testimony</label>
+                        <div class="col-xs-8">
+                        <textarea class="form-control" id="testimony" rows="2" name="testimony" maxlength="350" aria-describedby="testimonyHelper"></textarea>
+                        <small id="testimonyHelper" class="form-text text-muted">
+                        Max: 350 chars.
+                        </small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-3" >Overall</label>
+                        <div class="col-xs-8">
+                            <input name="overall" class="form-control" type="number" min="0" max="5" step="0.5" required aria-describedby="overallHelper">
+                            <small id="overallHelper" class="form-text text-muted">
+                            From 0 to 5. Interval: 0.5
+                            </small>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="modal-footer">
@@ -209,11 +239,11 @@
             </div>
             </div>
         </div>
-<!-- ============ END MODAL ADD GALLERY =============== -->
+<!-- ============ END MODAL ADD TESTIMONY =============== -->
 
-<!-- ============ START MODAL DELETE GALLERY =============== -->
+<!-- ============ START MODAL DELETE TESTIMONY =============== -->
 <?php 
-foreach($query_gallery->result_array() as $g):
+foreach($query_testimonials->result_array() as $g):
     $id=$g['id'];
     $title=$g['title'];
 ?>
@@ -244,7 +274,7 @@ foreach($query_gallery->result_array() as $g):
     </div>
 </div>
 <?php endforeach; ?>
-<!-- ============ END MODAL DELETE GALLERY =============== -->
+<!-- ============ END MODAL DELETE TESTIMONY =============== -->
 
 
 
