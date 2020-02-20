@@ -998,6 +998,68 @@ class Admin extends MY_Controller {
         $temp_data['content'] = $this->load->view('admin_pages/show_gallery', $this->data, true);
 		$this->load->view('admin_pages/layout', $temp_data, false);
 	}
+
+	public function addGalleryProcess(){
+		$this->isNotAdmin();
+		$this->isNotSuperAdmin();
+		
+		$id_training = $this->input->post('id_training');
+        $url = $this->input->post('url');
+        $title = $this->input->post('title');
+
+		$data   = array(
+			'id_training'=>$id_training, 
+			'url'=>$url, 
+			'title'=>$title
+		);
+		$insert = $this->Mysql->create('gallery', $data);
+
+		$query = $this->Mysql->getLatest('gallery');
+		if($query->num_rows()>0){
+			foreach($query->result() as $result){
+				$latestGalleryID=$result->id;
+			}
+		}
+
+		$this->session->set_flashdata('message', 'add_success');
+		$this->session->set_flashdata('object', $title);
+		$this->session->set_flashdata('id', $latestGalleryID);
+
+        redirect(site_url('admin/showGallery'));
+	}
+
+	public function editGalleryProcess(){
+		$this->isNotAdmin();
+		$this->isNotSuperAdmin();
+		$id=$this->input->post('id_gallery');
+        $data = array(
+			'url'=>$this->input->post('url'),
+			'title'=>$this->input->post('title')
+		);
+
+		$update = $this->Mysql->update(array('id'=>$id), 'gallery',$data);
+		
+
+		$this->session->set_flashdata('message', 'edit_success');
+		$this->session->set_flashdata('object', $this->input->post('title'));
+		$this->session->set_flashdata('id', $id);
+
+		redirect(site_url('admin/showGallery'));
+	}
+
+	public function deleteGalleryProcess(){
+		$this->isNotAdmin();
+		$this->isNotSuperAdmin();
+        $id = $this->input->post('id');
+        $title = $this->input->post('title');
+		$delete = $this->Mysql->delete(array('id'=>$id), 'gallery');
+
+		$this->session->set_flashdata('message', 'delete_success');
+		$this->session->set_flashdata('object', $title);
+		$this->session->set_flashdata('id', $id);
+		redirect(site_url('admin/showGallery'));
+	}
+
 	/* end GALLERY group */
 
 	/* start SETTINGS group */

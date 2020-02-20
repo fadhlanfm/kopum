@@ -1,14 +1,7 @@
 <link href="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js"></script>
 
-<?php
-foreach($query_gallery->result_array() as $g){
-    $id=$g['id'];
-    $id_training=$g['id_training'];
-    $url=$g['url'];
-    $title=$g['title'];
-}
-?>
+
     <!--==========================
       Schedule Section
     ============================-->
@@ -47,7 +40,7 @@ foreach($query_gallery->result_array() as $g){
                 </div>';
             }
         ?>
-            <h2>List of Documents</h2>
+            <h2>Gallery</h2>
         </div>
         
 
@@ -62,33 +55,38 @@ foreach($query_gallery->result_array() as $g){
                 <thead>
                     <tr>
                         <td>ID</td>
-                        <td>Training Topic</td>
+                        <td>Training</td>
                         <td>Title</td>
                         <td>Actions</td>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php
-                    /*
-                    foreach($query->result_array() as $d){
-                        $id=$d['id'];
-                        $name=$d['name'];
-                        $type=$d['type'];
-                        $location=$d['location'];
-                        $type = str_replace('.', '', $type);
-                    */
-                    ?>
+                <?php
+                foreach($query_gallery->result_array() as $g){
+                    $id=$g['id'];
+                    $id_training=$g['id_training'];
+                    $url=$g['url'];
+                    $title=$g['title'];
+                ?>
                     <tr>
-                        <td><?php //echo $id; ?></td>
-                        <td><?php //echo $name; ?></td>
-                        <td></td>
+                        <td><?php echo $id; ?></td>
+                        <td><?php
+                            foreach($query_trainings->result_array() as $t){
+                                $id_t=$t['id'];
+                                $topic_t=$t['topic'];
+                                if($id_training==$id_t){
+                                    echo $topic_t;;
+                                }
+                            }
+                        ?></td>
+                        <td><?php echo $title; ?></td>
                         <td>
-                        <a class="btn btn-sm btn-info" href="<?php //echo base_url().'uploads/public_documents/'.$location;?>" style="color: black;"><i class="far fa-eye"></i></a>
-                        <a class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal_edit<?php //echo $id;?>"><i class="far fa-edit"></i></a>
-                        <a class="btn btn-sm btn-warning" data-toggle="modal" data-target="#modal_delete<?php //echo $id;?>"><i class="far fa-trash-alt"></i></a>
+                        <a class="btn btn-sm btn-info" href="<?php echo $url; ?> " style="color: black;"><i class="far fa-eye"></i></a>
+                        <a class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal_edit<?php echo $id;?>"><i class="far fa-edit"></i></a>
+                        <a class="btn btn-sm btn-warning" data-toggle="modal" data-target="#modal_delete<?php echo $id;?>"><i class="far fa-trash-alt"></i></a>
                         </td>
                     </tr>
-                    <?php //} ?>
+                    <?php } ?>
                 </tbody>
             </table>
         </div>
@@ -100,58 +98,51 @@ foreach($query_gallery->result_array() as $g){
 
 </section>
 
-<!-- ============ START MODAL EDIT FORMAT =============== -->
+<!-- ============ START MODAL EDIT GALLERY =============== -->
         <?php
-        /*
-        foreach($query->result_array() as $d):
-            $id=$d['id'];
-            $name=$d['name'];
-            $location=$d['location'];
-            */
+        foreach($query_gallery->result_array() as $g1):
+            $id_g1=$g1['id'];
+            $id_training_g1=$g1['id_training'];
+            $url_g1=$g1['url'];
+            $title_g1=$g1['title'];
         ?>
-        <div class="modal fade" id="modal_edit<?php //echo $id;?>" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
+        <div class="modal fade" id="modal_edit<?php echo $id_g1;?>" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
             <div class="modal-dialog">
             <div class="modal-content">
             <div class="modal-header">
-            <h4 class="modal-title" id="exampleModalLabel">Edit document</h4>
+            <h4 class="modal-title" id="exampleModalLabel">Edit gallery</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
             </div>
-            <form class="form-horizontal" enctype="multipart/form-data" method="post" action="<?php //echo base_url().'admin/editDocumentProcess/'.$id;?>">
+            <form class="form-horizontal" enctype="multipart/form-data" method="post" action="<?php echo base_url().'admin/editGalleryProcess/'.$id_g1;?>">
                 <div class="modal-body">
 
                     <div class="form-group">
                         <div class="col-xs-8">
-                            <input name="id" value="<?php //echo $id;?>" class="form-control" type="text" placeholder="Format ID" readonly hidden>
+                            <input name="id_gallery" value="<?php echo $id_g1;?>" class="form-control" type="text" placeholder="Gallery ID" readonly hidden>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label col-xs-3" >Current file</label>
+                        <label class="control-label col-xs-3" >Training</label>
                         <div class="col-xs-8">
-                            <a href="<?php //echo base_url().'uploads/public_documents/'.$location;?>"><?php //echo $location ?><a>
-                        </div>
-                        <small id="docHelper" class="form-text text-muted">
-                        Insert file on the field below if you want to change <b>or</b> ignore if you don't want to.
-                        </small>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label col-xs-3" >File name</label>
-                        <div class="col-xs-8">
-                            <input name="name" value="<?php //echo $name;?>" class="form-control" type="text" placeholder="File name" required>
+                            <input name="id_training" value="<?php echo $id_training_g1;?>" class="form-control" type="text" placeholder="File name" required readonly>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label col-xs-3" >Change file</label>
+                        <label class="control-label col-xs-3" >URL</label>
                         <div class="col-xs-8">
-                            <input type="file" class="form-control" id="document" name="doc" accept="application/pdf, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.slideshow, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, image/jpeg" aria-describedby="docHelper">
+                        <input name="url" value="<?php echo $url_g1;?>" class="form-control" type="text" placeholder="e.g., https://i.imgur.com/jsgYqj1.jpg" required>
                         </div>
-                        <small id="docHelper" class="form-text text-muted">
-                        Accept image (jpg) or document (pdf, xls, doc, ppt, txt). Maximum size: 10 mb.
-                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-3" >Title</label>
+                        <div class="col-xs-8">
+                        <input name="title" value="<?php echo $title_g1;?>" class="form-control" type="text" placeholder="Image title" required>
+                        </div>
                     </div>
 
                 </div>
@@ -165,10 +156,10 @@ foreach($query_gallery->result_array() as $g){
             </div>
         </div>
 
-    <?php //endforeach;?>
-    <!-- ============ END MODAL EDIT FORMAT =============== -->
+    <?php endforeach;?>
+    <!-- ============ END MODAL EDIT GALLERY =============== -->
 
-<!-- ============ START MODAL ADD FORMAT =============== -->
+<!-- ============ START MODAL ADD GALLERY =============== -->
 
 <div class="modal fade" id="modal_add" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
             <div class="modal-dialog">
@@ -194,21 +185,21 @@ foreach($query_gallery->result_array() as $g){
                                     <option value="<?php echo $id_t; ?>"><?php echo $topic_t; ?></option>
                                 <?php } ?>
                             </select>
-                            <input name="training" class="form-control" type="hidden" value="<?php echo $id_t; ?>" required>
+                            <input name="id_training" class="form-control" type="hidden" value="<?php echo $id_t; ?>" required>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label class="control-label col-xs-3" >Image URL</label>
                         <div class="col-xs-8">
-                            <input name="url" class="form-control" type="text" placeholder="e.g., Timeline 2019" required>
+                            <input name="url" class="form-control" type="text" placeholder="e.g., https://i.imgur.com/jsgYqj1.jpg" required>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label class="control-label col-xs-3" >Title</label>
                         <div class="col-xs-8">
-                            <input name="title" class="form-control" type="text" placeholder="Image title (optional)">
+                            <input name="title" class="form-control" type="text" placeholder="Image title" required>
                         </div>
                     </div>
 
@@ -216,21 +207,19 @@ foreach($query_gallery->result_array() as $g){
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-hidden="true">Close</button>
-                    <button type="submit" class="btn btn-primary">Insert</button>
+                    <button type="submit" class="btn btn-primary">Add</button>
                 </div>
             </form>
             </div>
             </div>
         </div>
-<!-- ============ END MODAL ADD FORMAT =============== -->
+<!-- ============ END MODAL ADD GALLERY =============== -->
 
-<!-- ============ START MODAL DELETE FORMAT =============== -->
+<!-- ============ START MODAL DELETE GALLERY =============== -->
 <?php 
-/*
-foreach($query->result_array() as $d):
-    $id=$d['id'];
-    $name=$d['name'];
-*/
+foreach($query_gallery->result_array() as $g):
+    $id=$g['id'];
+    $title=$g['title'];
 ?>
 <div class="modal fade" id="modal_delete<?php echo $id;?>" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
     <div class="modal-dialog">
@@ -244,13 +233,13 @@ foreach($query->result_array() as $d):
 
             </div>
 
-            <form class="form-horizontal" method="post" action="<?php echo base_url().'admin/deleteDocumentProcess'?>">
+            <form class="form-horizontal" method="post" action="<?php echo base_url().'admin/deleteGalleryProcess'?>">
                 <div class="modal-body">
-                    <p>Are you sure want to permanently delete <b><?php //echo $name;?></b> ?</p>
+                    <p>Are you sure want to permanently delete <b><?php echo $title;?></b> ?</p>
                 </div>
                 <div class="modal-footer">
-                    <input type="hidden" name="id" value="<?php //echo $id;?>">
-                    <input type="hidden" name="name" value="<?php //echo $name;?>">
+                    <input type="hidden" name="id" value="<?php echo $id;?>">
+                    <input type="hidden" name="name" value="<?php echo $title;?>">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-hidden="true">Close</button>
                     <button type="submit" class="btn btn-warning">Delete</button>
                 </div>
@@ -258,8 +247,8 @@ foreach($query->result_array() as $d):
         </div>
     </div>
 </div>
-<?php //endforeach; ?>
-<!-- ============ END MODAL DELETE FORMAT =============== -->
+<?php endforeach; ?>
+<!-- ============ END MODAL DELETE GALLERY =============== -->
 
 
 
