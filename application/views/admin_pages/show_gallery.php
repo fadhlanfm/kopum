@@ -123,7 +123,14 @@
                     <div class="form-group">
                         <label class="control-label col-xs-3" >Training</label>
                         <div class="col-xs-8">
-                            <input name="id_training" value="<?php echo $id_training_g1;?>" class="form-control" type="text" placeholder="File name" required readonly>
+                            <?php
+                                foreach($query_trainings->result_array() as $tt){
+                                    $id_tt=$tt['id'];
+                                    $topic_tt=$tt['topic'];
+                                    if($id_tt == $id_training_g1)
+                                    echo '<input name="id_training" class="form-control" type="text" placeholder="File name" required readonly value="'.$topic_tt.'">'; 
+                                }
+                            ?>
                         </div>
                     </div>
 
@@ -172,16 +179,15 @@
                     <div class="form-group">
                         <label class="control-label col-xs-3" >Training Topic</label>
                         <div class="col-xs-8">
-                            <select class="js-example-basic-single" name="state">
+                            <select class="form-control" name="id_training">
                                 <?php
-                                foreach($query_trainings->result_array() as $t){
-                                    $id_t=$t['id'];
-                                    $topic_t=$t['topic'];
+                                foreach($query_trainings->result_array() as $tt){
+                                    $id_tt=$tt['id'];
+                                    $topic_tt=$tt['topic'];
+                                    echo '<option value="'.$id_tt.'">'.$topic_tt.'</option>'; 
+                                }
                                 ?>
-                                    <option value="<?php echo $id_t; ?>"><?php echo $topic_t; ?></option>
-                                <?php } ?>
                             </select>
-                            <input name="id_training" class="form-control" type="hidden" value="<?php echo $id_t; ?>" required>
                         </div>
                     </div>
 

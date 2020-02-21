@@ -1109,6 +1109,39 @@ class Admin extends MY_Controller {
         redirect(site_url('admin/showTestimonials'));
 	}
 
+	public function editTestiProcess(){
+		$this->isNotAdmin();
+		$this->isNotSuperAdmin();
+		$id_t1=$this->input->post('id_t1');
+		$testimony=$this->input->post('testimony');
+		$overall=$this->input->post('overall');
+        $data = array(
+			'overall'=>$overall,
+			'comment'=>$testimony
+		);
+
+		$update = $this->Mysql->update(array('id'=>$id_t1), 'testimonials', $data);
+		
+
+		$this->session->set_flashdata('message', 'edit_success');
+		$this->session->set_flashdata('object', $testimony);
+		$this->session->set_flashdata('id', $id);
+
+		redirect(site_url('admin/showTestimonials'));
+	}
+
+	public function deleteTestiProcess(){
+		$this->isNotAdmin();
+		$this->isNotSuperAdmin();
+        $id = $this->input->post('id');
+        $testimony = $this->input->post('testimony');
+		$delete = $this->Mysql->delete(array('id'=>$id), 'testimonials');
+
+		$this->session->set_flashdata('message', 'delete_success');
+		$this->session->set_flashdata('object', $testimony);
+		$this->session->set_flashdata('id', $id);
+		redirect(site_url('admin/showTestimonials'));
+	}
 	/* end TESTIMONIALS group */
 
 	/* start SETTINGS group */

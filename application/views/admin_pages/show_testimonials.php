@@ -101,48 +101,86 @@
 
 <!-- ============ START MODAL EDIT TESTIMONY =============== -->
         <?php
-        foreach($query_testimonials->result_array() as $g1):
-            $id_g1=$g1['id'];
-            $id_training_g1=$g1['id_training'];
-            $url_g1=$g1['url'];
-            $title_g1=$g1['title'];
+        foreach($query_testimonials->result_array() as $t1):
+            $id_t1=$t1['id'];
+            $id_training_t1=$t1['id_training'];
+            $commenter_name_t1=$t1['commenter_name'];
+            $commenter_title_t1=$t1['commenter_title'];
+            $commenter_company_t1=$t1['commenter_company'];
+            $comment_t1=$t1['comment'];
+            $overall_t1=$t1['overall'];
         ?>
-        <div class="modal fade" id="modal_edit<?php echo $id_g1;?>" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
+        <div class="modal fade" id="modal_edit<?php echo $id_t1;?>" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
             <div class="modal-dialog">
             <div class="modal-content">
             <div class="modal-header">
-            <h4 class="modal-title" id="exampleModalLabel">Edit gallery</h4>
+            <h4 class="modal-title" id="exampleModalLabel">Edit testimony</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
             </div>
-            <form class="form-horizontal" enctype="multipart/form-data" method="post" action="<?php echo base_url().'admin/editGalleryProcess/'.$id_g1;?>">
+            <form class="form-horizontal" enctype="multipart/form-data" method="post" action="<?php echo base_url().'admin/editTestiProcess/'.$id_t1;?>">
                 <div class="modal-body">
 
                     <div class="form-group">
                         <div class="col-xs-8">
-                            <input name="id_gallery" value="<?php echo $id_g1;?>" class="form-control" type="text" placeholder="Gallery ID" readonly hidden>
+                            <input name="id_testimony" value="<?php echo $id_t1;?>" class="form-control" type="text" placeholder="Testimony ID" readonly hidden>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label class="control-label col-xs-3" >Training</label>
                         <div class="col-xs-8">
-                            <input name="id_training" value="<?php echo $id_training_g1;?>" class="form-control" type="text" placeholder="File name" required readonly>
+                            <input name="id_training" value="<?php
+                            foreach($query_trainings->result_array() as $tr){
+                                $id_tr=$tr['id'];
+                                $topic_tr=$tr['topic'];
+                                if($id_training_t1==$id_tr){
+                                    echo $topic_tr;;
+                                }
+                            }
+                        ?>" class="form-control" type="text" placeholder="File name" required readonly>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label col-xs-3" >URL</label>
+                        <label class="control-label col-xs-3" >Name</label>
                         <div class="col-xs-8">
-                        <input name="url" value="<?php echo $url_g1;?>" class="form-control" type="text" placeholder="e.g., https://i.imgur.com/jsgYqj1.jpg" required>
+                            <input name="name" class="form-control" type="text" value="<?php echo $commenter_name_t1;?>" placeholder="Who gives the testimony" required readonly>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label class="control-label col-xs-3" >Title</label>
                         <div class="col-xs-8">
-                        <input name="title" value="<?php echo $title_g1;?>" class="form-control" type="text" placeholder="Image title" required>
+                            <input name="title" class="form-control" type="text" value="<?php echo $commenter_title_t1;?>" placeholder="His/Her job title" required readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-3" >Company</label>
+                        <div class="col-xs-8">
+                            <input name="company" class="form-control" type="text" value="<?php echo $commenter_company_t1;?>" placeholder="His/Her company" required readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-3" >Testimony</label>
+                        <div class="col-xs-8">
+                        <textarea class="form-control" id="testimony" rows="2" name="testimony" maxlength="350" aria-describedby="testimonyHelper"><?php echo $comment_t1; ?></textarea>
+                        <small id="testimonyHelper" class="form-text text-muted">
+                        Max: 350 chars.
+                        </small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-3" >Overall</label>
+                        <div class="col-xs-8">
+                            <input name="overall" class="form-control" type="number" min="0" max="5" step="0.5" required aria-describedby="overallHelper" value="<?php echo $overall_t1; ?>">
+                            <small id="overallHelper" class="form-text text-muted">
+                            From 0 to 5. Interval: 0.5
+                            </small>
                         </div>
                     </div>
 
@@ -176,16 +214,15 @@
                     <div class="form-group">
                         <label class="control-label col-xs-3" >Training Topic</label>
                         <div class="col-xs-8">
-                            <select class="js-example-basic-single" name="state">
+                            <select class="form-control" name="id_training">
                                 <?php
-                                foreach($query_trainings->result_array() as $t){
-                                    $id_t=$t['id'];
-                                    $topic_t=$t['topic'];
+                                    foreach($query_trainings->result_array() as $tt){
+                                        $id_tt=$tt['id'];
+                                        $topic_tt=$tt['topic'];
+                                        echo '<option value="'.$id_tt.'">'.$topic_tt.'</option>'; 
+                                    }
                                 ?>
-                                    <option value="<?php echo $id_t; ?>"><?php echo $topic_t; ?></option>
-                                <?php } ?>
                             </select>
-                            <input name="id_training" class="form-control" type="hidden" value="<?php echo $id_t; ?>" required>
                         </div>
                     </div>
 
@@ -245,7 +282,7 @@
 <?php 
 foreach($query_testimonials->result_array() as $g):
     $id=$g['id'];
-    $title=$g['title'];
+    $comment=$g['comment'];
 ?>
 <div class="modal fade" id="modal_delete<?php echo $id;?>" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
     <div class="modal-dialog">
@@ -259,13 +296,13 @@ foreach($query_testimonials->result_array() as $g):
 
             </div>
 
-            <form class="form-horizontal" method="post" action="<?php echo base_url().'admin/deleteGalleryProcess'?>">
+            <form class="form-horizontal" method="post" action="<?php echo base_url().'admin/deleteTestiProcess'?>">
                 <div class="modal-body">
-                    <p>Are you sure want to permanently delete <b><?php echo $title;?></b> ?</p>
+                    <p>Are you sure want to permanently delete <b><?php echo $comment;?></b> ?</p>
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" name="id" value="<?php echo $id;?>">
-                    <input type="hidden" name="name" value="<?php echo $title;?>">
+                    <input type="hidden" name="testimony" value="<?php echo $comment;?>">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-hidden="true">Close</button>
                     <button type="submit" class="btn btn-warning">Delete</button>
                 </div>
